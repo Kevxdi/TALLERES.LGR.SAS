@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Cotización</title>
+
+  <!-- Estilos del formulario -->
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #eafaf1;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 80%;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    #logo {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-bottom: 20px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    input[type="email"] {
+      padding: 8px;
+      width: 95%;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #2ecc71;
+    }
+
+    .total {
+      text-align: right;
+      font-size: 1.5em;
+      margin-top: 20px;
+      word-wrap: break-word; /* Permite que el texto se ajuste a la línea */
+      overflow: hidden; /* Oculta el contenido que se desborda */
+      text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
+    }
+
+    .total span {
+      display: inline-block;
+      max-width: 100%; /* Limita el ancho máximo del número */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #777;
+    }
+
+    .delete-btn {
+      color: red;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #emailField,
+    #titleField {
+      margin-top: 10px;
+      width: 60%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="cotizacion-container">
+    <!-- Logo de la empresa -->
+    <img id="logo" src="assets/img/logotallereslgr.png" alt="Logo Talleres LGR">
+    <!-- Título de la página -->
+    <h1>Cotización de Productos</h1>
+
+    <!-- Tabla para mostrar los productos -->
+    <table id="productosTable">
+      <thead>
+        <tr>
+          <th>Cantidad</th>
+          <th>Producto</th>
+          <th>Precio Unitario (COP)</th>
+          <th>Precio Total (COP)</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- Sección para mostrar el subtotal, IVA y total -->
+    <div class="total">
+      <p><strong>Subtotal:</strong> <span id="subtotal">0</span> COP</p>
+      <p><strong>IVA (19%):</strong> <span id="iva">0</span> COP</p>
+      <p><strong>Total a Pagar:</strong> <span id="total">0</span> COP</p>
+    </div>
+
+    <!-- Campo de entrada para el correo electrónico -->
+    <input type="email" id="emailField" placeholder="Correo para enviar cotización">
+    <!-- Campo de entrada para el título del PDF -->
+    <input type="text" id="titleField" placeholder="Título del PDF">
+    <!-- Botón para agregar un nuevo producto -->
+    <button class="btn" type="button" onclick="agregarProducto()">Agregar Producto</button>
+    <!-- Botón para generar y enviar la cotización en PDF -->
+    <button class="btn" type="button" onclick="generarYEnviarPDF()">Enviar Cotización</button>
+  </div>
+
+  <!-- Inclusión de las librerías jsPDF y html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    const { jsPDF } = window.jspdf;
+    let invoiceCount = 0; // Contador de facturas
+
+    // Función para agregar un nuevo producto a la tabla
+    function agregarProducto() {
+      const tableBody = document.querySelector('#productosTable tbody');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+              <td><input type="number" class="cantidad" placeholder="Cantidad" oninput="calcularTotal()"></td>
+              <td><input type="text" class="producto" placeholder="Nombre del Producto"></td>
+              <td><input type="number" class="precioUnitario" placeholder="Precio Unitario" oninput="calcularTotal()"></td>
+              <td><input type="number" class="precioTotal" readonly></td>
+              <td><span class="delete-btn" onclick="eliminarProducto(this)">X</span></td>`;
+      tableBody.appendChild(row);
+    }
+
+    // Función para eliminar un producto de la tabla
+    function eliminarProducto(btn) {
+      btn.parentElement.parentElement.remove();
+      calcularTotal();
+    }
+
+    // Función para calcular el subtotal, IVA y total
+    function calcularTotal() {
+    let subtotal = 0;
+    document.querySelectorAll('.cantidad').forEach((_, i) => {
+      const cantidad = parseFloat(document.querySelectorAll('.cantidad')[i].value) || 0;
+      const precioUnitario = parseFloat(document.querySelectorAll('.precioUnitario')[i].value) || 0;
+      const totalProducto = cantidad * precioUnitario;
+      document.querySelectorAll('.precioTotal')[i].value = totalProducto.toFixed(2);
+      subtotal += totalProducto;
+    });
+
+    const iva = subtotal * 0.19;
+    const total = subtotal + iva;
+
+    // Formatear los valores con separadores de miles y dos decimales
+    document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('iva').innerText = iva.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('total').innerText = total.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+    // Función para generar y enviar la cotización en PDF
+    function generarYEnviarPDF() {
+      const email = document.getElementById('emailField').value;
+      const title = document.getElementById('titleField').value || 'cotizacion';
+      if (!email) return alert('Por favor, ingresa un correo válido.');
+
+      html2canvas(document.querySelector('#cotizacion-container')).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        pdf.addImage(imgData, 'PNG', 10, 10, 190, 0);
+        pdf.save(`${title}.pdf`);
+        invoiceCount++; // Incrementar el contador de facturas
+        window.location.href = `mailto:${email}?subject=Cotización&body=Adjunto la cotización solicitada.%0D%0A%0D%0AAtentamente,%0D%0ALuis Gustavo Rojas%0D%0ATALLERES LGR SAS%0D%0A3112319008-4596519`;
+      });
+    }
+
+    // Agregar un producto inicial al cargar la página
+    agregarProducto();
+  </script>
+</body>
+
+</html>
