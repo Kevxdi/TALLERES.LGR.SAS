@@ -1,7 +1,3 @@
-
-<!-- git branch -M main -->
-<!-- git push -u origin main -->
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,14 +5,106 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Formulario de Cotización</title>
-
-  <!-- Estilos del formulario -->
   <style>
     body {
       font-family: 'Arial', sans-serif;
       background-color: #eafaf1;
       margin: 0;
       padding: 0;
+    }
+
+    /* Estilos para el menú */
+    .menu {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #2c3e50;
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: white;
+      font-size: 1.2em;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      transition: background-color 0.3s;
+    }
+
+    .menu:hover {
+      background-color: #34495e;
+    }
+
+    .menu-options {
+      display: none;
+      background-color: #ecf0f1;
+      position: absolute;
+      left: 0;
+      top: 50px;
+      padding: 15px;
+      border-radius: 8px;
+      width: 180px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu:hover .menu-options {
+      display: block;
+    }
+
+    .menu-options a {
+      display: block;
+      padding: 10px;
+      color: #2c3e50;
+      text-decoration: none;
+      font-size: 1em;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-options a:hover {
+      background-color: #27ae60;
+      color: white;
+    }
+
+    /* Estilos de los formularios */
+    .form-cliente {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-cliente h2 {
+      color: #27ae60;
+      margin-bottom: 20px;
+    }
+
+    .form-cliente input[type="text"],
+    .form-cliente input[type="email"] {
+      padding: 12px;
+      width: 80%;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    .form-cliente .btn {
+      padding: 12px 30px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .form-cliente .btn:hover {
+      background-color: #2ecc71;
     }
 
     .container {
@@ -28,6 +116,7 @@
       text-align: center;
     }
 
+    /* Estilos del resto del formulario */
     #logo {
       width: 150px;
       margin-bottom: 20px;
@@ -84,23 +173,6 @@
       background-color: #2ecc71;
     }
 
-    .total {
-      text-align: right;
-      font-size: 1.5em;
-      margin-top: 20px;
-      word-wrap: break-word; /* Permite que el texto se ajuste a la línea */
-      overflow: hidden; /* Oculta el contenido que se desborda */
-      text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
-    }
-
-    .total span {
-      display: inline-block;
-      max-width: 100%; /* Limita el ancho máximo del número */
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap; /* Evita que el texto se divida en varias líneas */
-    }
-
     .footer {
       text-align: center;
       margin-top: 20px;
@@ -113,23 +185,22 @@
       font-weight: bold;
     }
 
-    #emailField,
-    #titleField {
-      margin-top: 10px;
-      width: 60%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 1em;
-    }
   </style>
 </head>
 
 <body>
+  <!-- Menú de opciones -->
+  <div class="menu">
+    Menú
+    <div class="menu-options">
+      <a href="#" onclick="mostrarCotizacion()">Cotización</a>
+      <a href="#" onclick="mostrarFormularioCliente()">Agregar Cliente</a>
+    </div>
+  </div>
+
   <div class="container" id="cotizacion-container">
     <!-- Logo de la empresa -->
     <img id="logo" src="assets/img/logotallereslgr.png" alt="Logo Talleres LGR">
-    <!-- Título de la página -->
     <h1>Cotización de Productos</h1>
 
     <!-- Tabla para mostrar los productos -->
@@ -163,71 +234,126 @@
     <button class="btn" type="button" onclick="generarYEnviarPDF()">Enviar Cotización</button>
   </div>
 
-  <!-- Inclusión de las librerías jsPDF y html2canvas -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Formulario para agregar un cliente -->
+  <div class="form-cliente" id="form-cliente">
+    <h2>Agregar Cliente</h2>
+    <input type="text" id="nombreCliente" placeholder="Nombre del Cliente" />
+    <input type="email" id="emailCliente" placeholder="Correo del Cliente" />
+    <button class="btn" type="button" onclick="agregarCliente()">Guardar Cliente</button>
+  </div>
 
   <script>
-    const { jsPDF } = window.jspdf;
-    let invoiceCount = 0; // Contador de facturas
-
-    // Función para agregar un nuevo producto a la tabla
-    function agregarProducto() {
-      const tableBody = document.querySelector('#productosTable tbody');
-      const row = document.createElement('tr');
-      row.innerHTML = `
-              <td><input type="number" class="cantidad" placeholder="Cantidad" oninput="calcularTotal()"></td>
-              <td><input type="text" class="producto" placeholder="Nombre del Producto"></td>
-              <td><input type="number" class="precioUnitario" placeholder="Precio Unitario" oninput="calcularTotal()"></td>
-              <td><input type="number" class="precioTotal" readonly></td>
-              <td><span class="delete-btn" onclick="eliminarProducto(this)">X</span></td>`;
-      tableBody.appendChild(row);
+    // Función para mostrar la sección de cotización
+    function mostrarCotizacion() {
+      document.getElementById('cotizacion-container').style.display = 'block';
+      document.getElementById('form-cliente').style.display = 'none';
     }
 
-    // Función para eliminar un producto de la tabla
-    function eliminarProducto(btn) {
-      btn.parentElement.parentElement.remove();
+    // Función para mostrar la sección de agregar cliente
+    function mostrarFormularioCliente() {
+      document.getElementById('cotizacion-container').style.display = 'none';
+      document.getElementById('form-cliente').style.display = 'block';
+    }
+
+    // Función para guardar el cliente en el localStorage
+    function agregarCliente() {
+      const nombre = document.getElementById('nombreCliente').value;
+      const email = document.getElementById('emailCliente').value;
+
+      if (!nombre || !email) {
+        alert('Por favor, completa los campos.');
+        return;
+      }
+
+      const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+      clientes.push({ nombre, email });
+      localStorage.setItem('clientes', JSON.stringify(clientes));
+
+      alert('Cliente agregado correctamente');
+      document.getElementById('nombreCliente').value = '';
+      document.getElementById('emailCliente').value = '';
+    }
+
+    // Función para agregar un producto a la tabla
+    function agregarProducto() {
+      const productosTable = document.getElementById('productosTable').querySelector('tbody');
+      const nuevaFila = document.createElement('tr');
+
+      nuevaFila.innerHTML = `
+        <td><input type="number" class="cantidad" value="1" min="1" onchange="calcularTotal()"></td>
+        <td><input type="text" class="producto" placeholder="Nombre del producto"></td>
+        <td><input type="number" class="precioUnitario" value="0" min="0" onchange="calcularTotal()"></td>
+        <td><input type="text" class="precioTotal" value="0" readonly></td>
+        <td><button class="delete-btn" onclick="eliminarProducto(this)">Eliminar</button></td>
+      `;
+
+      productosTable.appendChild(nuevaFila);
       calcularTotal();
     }
 
     // Función para calcular el subtotal, IVA y total
     function calcularTotal() {
-    let subtotal = 0;
-    document.querySelectorAll('.cantidad').forEach((_, i) => {
-      const cantidad = parseFloat(document.querySelectorAll('.cantidad')[i].value) || 0;
-      const precioUnitario = parseFloat(document.querySelectorAll('.precioUnitario')[i].value) || 0;
-      const totalProducto = cantidad * precioUnitario;
-      document.querySelectorAll('.precioTotal')[i].value = totalProducto.toFixed(2);
-      subtotal += totalProducto;
-    });
+      let subtotal = 0;
+      const filas = document.querySelectorAll('#productosTable tbody tr');
 
-    const iva = subtotal * 0.19;
-    const total = subtotal + iva;
+      filas.forEach((fila) => {
+        const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
+        const precioUnitario = parseFloat(fila.querySelector('.precioUnitario').value) || 0;
+        const precioTotal = cantidad * precioUnitario;
 
-    // Formatear los valores con separadores de miles y dos decimales
-    document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById('iva').innerText = iva.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById('total').innerText = total.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
-    // Función para generar y enviar la cotización en PDF
-    function generarYEnviarPDF() {
-      const email = document.getElementById('emailField').value;
-      const title = document.getElementById('titleField').value || 'cotizacion';
-      if (!email) return alert('Por favor, ingresa un correo válido.');
-
-      html2canvas(document.querySelector('#cotizacion-container')).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-        pdf.addImage(imgData, 'PNG', 10, 10, 190, 0);
-        pdf.save(`${title}.pdf`);
-        invoiceCount++; // Incrementar el contador de facturas
-        window.location.href = `mailto:${email}?subject=Cotización&body=Adjunto la cotización solicitada.%0D%0A%0D%0AAtentamente,%0D%0ALuis Gustavo Rojas%0D%0ATALLERES LGR SAS%0D%0A3112319008-4596519`;
+        fila.querySelector('.precioTotal').value = precioTotal.toFixed(2);
+        subtotal += precioTotal;
       });
+
+      const iva = subtotal * 0.19;
+      const total = subtotal + iva;
+
+      document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-CO', { minimumFractionDigits: 2 });
+      document.getElementById('iva').innerText = iva.toLocaleString('es-CO', { minimumFractionDigits: 2 });
+      document.getElementById('total').innerText = total.toLocaleString('es-CO', { minimumFractionDigits: 2 });
     }
 
-    // Agregar un producto inicial al cargar la página
-    agregarProducto();
+    // Función para eliminar un producto de la tabla
+    function eliminarProducto(btn) {
+      const fila = btn.parentElement.parentElement;
+      fila.remove();
+      calcularTotal();
+    }
+
+    // Función para generar y enviar la cotización por correo
+    function generarYEnviarPDF() {
+      const email = document.getElementById('emailField').value;
+      const title = document.getElementById('titleField').value || 'Cotización';
+      const productosTable = document.querySelectorAll('#productosTable tbody tr');
+
+      if (!email) {
+        alert('Por favor, ingresa un correo electrónico.');
+        return;
+      }
+
+      // Generar el contenido de la cotización
+      let cotizacion = `Cotización: ${title}\n\n`;
+      cotizacion += 'Cantidad\tProducto\tPrecio Unitario\tPrecio Total\n';
+
+      productosTable.forEach((fila) => {
+        const cantidad = fila.querySelector('.cantidad').value;
+        const producto = fila.querySelector('.producto').value;
+        const precioUnitario = fila.querySelector('.precioUnitario').value;
+        const precioTotal = fila.querySelector('.precioTotal').value;
+
+        cotizacion += `${cantidad}\t${producto}\t${precioUnitario}\t${precioTotal}\n`;
+      });
+
+      const subtotal = document.getElementById('subtotal').innerText;
+      const iva = document.getElementById('iva').innerText;
+      const total = document.getElementById('total').innerText;
+
+      cotizacion += `\nSubtotal: ${subtotal} COP\nIVA (19%): ${iva} COP\nTotal a Pagar: ${total} COP`;
+
+      // Abrir el cliente de correo con el contenido generado
+      const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(cotizacion)}`;
+      window.location.href = mailtoLink;
+    }
   </script>
 </body>
 
