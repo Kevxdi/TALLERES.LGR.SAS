@@ -3,14 +3,14 @@ const { exec } = require('child_process');
 const cors = require('cors');
 
 const app = express();
-const port = 4000;
+const port = 4000; // Cambia el puerto aquí
 
 app.use(cors());
 app.use(express.json());
 
 // Ruta para iniciar el servidor
 app.post('/start-server', (req, res) => {
-  const command = 'node server.js'; // Comando para iniciar el servidor
+  const command = 'server-controller.js'; // Comando para iniciar el servidor
 
   exec(command, (error, stdout, stderr) => {
     if (error) {

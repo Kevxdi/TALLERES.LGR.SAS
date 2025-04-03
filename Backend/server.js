@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const nodemailer = require('nodemailer');
 const cors = require('cors'); // Importa el paquete cors
+const { exec } = require('child_process');
 
 const app = express();
 const upload = multer();
@@ -63,6 +64,22 @@ app.post('/enviar-correo', upload.single('pdf'), async (req, res) => {
     console.error('Error al enviar el correo:', error);
     res.status(500).send('Error al enviar el correo.');
   }
+});
+
+// Endpoint para iniciar el servidor
+app.post('/iniciar-servidor', (req, res) => {
+  exec('node server.js', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error al iniciar el servidor: ${error.message}`);
+      return res.status(500).send('Error al iniciar el servidor.');
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return res.status(500).send('Error al iniciar el servidor.');
+    }
+    console.log(`stdout: ${stdout}`);
+    res.send('Servidor iniciado correctamente.');
+  });
 });
 
 // Iniciar el servidor

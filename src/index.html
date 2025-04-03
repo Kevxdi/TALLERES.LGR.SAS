@@ -225,7 +225,7 @@
       <p><strong>Total a Pagar:</strong> <span id="total">0</span> COP</p>
     </div>
 
-    <!-- Campo de entrada para el correo electrónico -->
+    <!-- Campo de entrada para el correo electrónico -->  
     <input type="email" id="emailField" placeholder="Correo para enviar cotización">
     <!-- Campo de entrada para el título del PDF -->
     <input type="text" id="titleField" placeholder="Título del PDF">
@@ -233,6 +233,8 @@
     <button class="btn" type="button" onclick="agregarProducto()">Agregar Producto</button>
     <!-- Botón para generar y enviar la cotización en PDF -->
     <button class="btn" type="button" onclick="generarYEnviarPDF()">Enviar Cotización</button>
+    <!-- Botón para iniciar el servidor -->
+    <button class="btn" type="button" onclick="iniciarServidor()">Iniciar Servidor</button>
   </div>
 
   <!-- Formulario para agregar un cliente -->
@@ -423,6 +425,24 @@
         ctx.drawImage(img, 0, 0, img.width, img.height);
         resolve(canvas.toDataURL('image/png'));
       });
+    }
+
+    // Función para iniciar el servidor
+    async function iniciarServidor() {
+      try {
+        const response = await fetch('http://localhost:4000/start-server', {
+          method: 'POST',
+        });
+
+        if (response.ok) {
+          alert('Servidor iniciado correctamente.');
+        } else {
+          alert('Error al iniciar el servidor.');
+        }
+      } catch (error) {
+        console.error('Error al iniciar el servidor:', error);
+        alert('Hubo un problema al intentar iniciar el servidor.');
+      }
     }
   </script>
 </body>
