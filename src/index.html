@@ -362,11 +362,11 @@
 
       // Encabezado debajo del logo
       pdf.setFontSize(18);
-      pdf.setTextColor('#0359af'); // Azul oscuro
+      pdf.setTextColor('#000000'); // Cambiado a negro
       pdf.text(title, pageWidth / 2, 60, { align: 'center' }); // Título centrado
 
       pdf.setFontSize(12);
-      pdf.setTextColor('#2c3e50');
+      pdf.setTextColor('#000000'); // Cambiado a negro
       pdf.text(`Correo del cliente: ${email}`, 10, 70);
       pdf.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 80);
 
@@ -376,15 +376,15 @@
         body: cotizacion,
         startY: 90,
         theme: 'grid',
-        headStyles: { fillColor: [44, 62, 80], textColor: [255, 255, 255] }, // Azul oscuro con texto blanco
-        styles: { fontSize: 10, textColor: '#0359af' }, // Azul oscuro para el texto
+        headStyles: { fillColor: [3, 89, 175], textColor: [255, 255, 255] }, // Azul claro para las celdas superiores
+        styles: { fontSize: 10, textColor: '#000000' }, // Cambiado a negro
         alternateRowStyles: { fillColor: [240, 240, 240] }, // Fondo gris claro para filas alternas
       });
 
       // Totales alineados a la derecha
       const finalY = pdf.lastAutoTable.finalY + 10;
       pdf.setFontSize(12);
-      pdf.setTextColor('#2c3e50');
+      pdf.setTextColor('#000000'); // Cambiado a negro
       pdf.text(`Subtotal: ${subtotal} COP`, pageWidth - 10, finalY, { align: 'right' });
       pdf.text(`IVA (19%): ${iva} COP`, pageWidth - 10, finalY + 10, { align: 'right' });
       pdf.text(`Total a Pagar: ${total} COP`, pageWidth - 10, finalY + 20, { align: 'right' });
@@ -430,7 +430,7 @@
     // Función para iniciar el servidor
     async function iniciarServidor() {
       try {
-        const response = await fetch('http://localhost:4000/start-server', {
+        const response = await fetch('http://localhost:3000/start-server', {
           method: 'POST',
         });
 
