@@ -22,4 +22,3 @@ out/
 *.swp
 node_modules
 # Ignorar la carpeta de Angular
-.angular/
