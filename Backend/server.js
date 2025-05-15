@@ -28,15 +28,15 @@ app.post('/enviar-correo', upload.single('pdf'), async (req, res) => {
 
   // Configurar el transporte de correo
   const transporter = nodemailer.createTransport({
-    service: 'yahoo',
+    service: 'gmail.com',
     auth: {
-      user: 'tallereslgr@yahoo.es',
-      pass: 'uaaylobekvykjjup',
+      user: 'spamsitowtf@gmail.com', //Aqui va el correo
+      pass: 'loqc ulrs yspb ortg', //Aqui va la contraseña
     },
   });
 
   const mailOptions = {
-    from: 'tallereslgr@yahoo.es',
+    from: 'spamsitowtf@gmail.com',  //Aqui va el correo
     to: email,
     subject: title,
     text: 'Buen día, adjunto cotización solicitada.\n\nAtentamente\n\nLuis Gustavo Rojas\nTALLERES LGR SAS\n3112319008-4596519',

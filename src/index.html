@@ -1,273 +1,273 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario de Cotización</title>
-  <!-- Referencia al archivo de estilos -->
-  <link rel="stylesheet" href="styles.css">
-  <!-- Scripts necesarios -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Cotización</title>
+    <!-- Referencia al archivo de estilos -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Scripts necesarios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  </head>
 
-<body>
-  <!-- Menú de opciones -->
-  <div class="menu">
-    Menú
-    <div class="menu-options">
-      <a href="#" onclick="mostrarCotizacion()">Cotización</a>
-      <a href="#" onclick="mostrarFormularioCliente()">Agregar Cliente</a>
-    </div>
-  </div>
-
-  <div class="container" id="cotizacion-container">
-    <!-- Logo de la empresa -->
-    <img id="logo" src="assets/img/tallereschica.png" alt="Logo Talleres LGR" class="logo">
-    <h1>Cotización de Productos</h1>
-
-    <!-- Tabla para mostrar los productos -->
-    <table id="productosTable">
-      <thead>
-        <tr>
-          <th>Cantidad</th>
-          <th>Producto</th>
-          <th>Precio Unitario (COP)</th>
-          <th>Precio Total (COP)</th>
-          <th>Eliminar</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <!-- Sección para mostrar el subtotal, IVA y total -->
-    <div class="total">
-      <p><strong>Subtotal:</strong> <span id="subtotal">0</span> COP</p>
-      <p><strong>IVA (19%):</strong> <span id="iva">0</span> COP</p>
-      <p><strong>Total a Pagar:</strong> <span id="total">0</span> COP</p>
+  <body>
+    <!-- Menú de opciones -->
+    <div class="menu">
+      Menú
+      <div class="menu-options">
+        <a href="#" onclick="mostrarCotizacion()">Cotización</a>
+        <a href="#" onclick="mostrarFormularioCliente()">Agregar Cliente</a>
+      </div>
     </div>
 
-    <!-- Campo de entrada para el correo electrónico -->
-    <input type="email" id="emailField" placeholder="Correo para enviar cotización">
-    <!-- Campo de entrada para el título del PDF -->
-    <input type="text" id="titleField" placeholder="Título del PDF">
-    <!-- Botón para agregar un nuevo producto -->
-    <button class="btn" type="button" onclick="agregarProducto()">Agregar Producto</button>
-    <!-- Botón para generar y enviar la cotización en PDF -->
-    <button class="btn" type="button" onclick="generarYEnviarPDF()">Enviar Cotización</button>
-    <!-- Botón para iniciar el servidor -->
-    <button class="btn" type="button" onclick="iniciarServidor()">Iniciar Servidor</button>
-  </div>
+    <div class="container" id="cotizacion-container">
+      <!-- Logo de la empresa -->
+      <img id="logo" src="assets/img/tallereschica.png" alt="Logo Talleres LGR" class="logo">
+      <h1>Cotización de Productos</h1>
 
-  <!-- Formulario para agregar un cliente -->
-  <div class="form-cliente" id="form-cliente">
-    <img id="logo" src="assets/img/tallereschica.png" alt="Logo Talleres LGR" class="logo">
-    <h2>Agregar Cliente</h2>
-    <input type="text" id="nombreCliente" placeholder="Nombre del Cliente">
-    <input type="email" id="emailCliente" placeholder="Correo del Cliente">
-    <button class="btn" type="button" onclick="agregarCliente()">Guardar Cliente</button>
-  </div>
+      <!-- Tabla para mostrar los productos -->
+      <table id="productosTable">
+        <thead>
+          <tr>
+            <th>Cantidad</th>
+            <th>Producto</th>
+            <th>Precio Unitario (COP)</th>
+            <th>Precio Total (COP)</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-  <script>
-    // Función para mostrar la sección de cotización
-    function mostrarCotizacion() {
-      document.getElementById('cotizacion-container').style.display = 'block';
-      document.getElementById('form-cliente').style.display = 'none';
-    }
+      <!-- Sección para mostrar el subtotal, IVA y total -->
+      <div class="total">
+        <p><strong>Subtotal:</strong> <span id="subtotal">0</span> COP</p>
+        <p><strong>IVA (19%):</strong> <span id="iva">0</span> COP</p>
+        <p><strong>Total a Pagar:</strong> <span id="total">0</span> COP</p>
+      </div>
 
-    // Función para mostrar la sección de agregar cliente
-    function mostrarFormularioCliente() {
-      document.getElementById('cotizacion-container').style.display = 'none';
-      document.getElementById('form-cliente').style.display = 'block';
-    }
+      <!-- Campo de entrada para el correo electrónico -->
+      <input type="email" id="emailField" placeholder="Correo para enviar cotización">
+      <!-- Campo de entrada para el título del PDF -->
+      <input type="text" id="titleField" placeholder="Título del PDF">
+      <!-- Botón para agregar un nuevo producto -->
+      <button class="btn" type="button" onclick="agregarProducto()">Agregar Producto</button>
+      <!-- Botón para generar y enviar la cotización en PDF -->
+      <button class="btn" type="button" onclick="generarYEnviarPDF()">Enviar Cotización</button>
+      <!-- Botón para iniciar el servidor -->
+      <button class="btn" type="button" onclick="iniciarServidor()">Iniciar Servidor</button>
+    </div>
 
-    // Función para guardar el cliente en el localStorage
-    function agregarCliente() {
-      const nombre = document.getElementById('nombreCliente').value;
-      const email = document.getElementById('emailCliente').value;
+    <!-- Formulario para agregar un cliente -->
+    <div class="form-cliente" id="form-cliente">
+      <img id="logo" src="assets/img/tallereschica.png" alt="Logo Talleres LGR" class="logo">
+      <h2>Agregar Cliente</h2>
+      <input type="text" id="nombreCliente" placeholder="Nombre del Cliente">
+      <input type="email" id="emailCliente" placeholder="Correo del Cliente">
+      <button class="btn" type="button" onclick="agregarCliente()">Guardar Cliente</button>
+    </div>
 
-      if (!nombre || !email) {
-        alert('Por favor, completa los campos.');
-        return;
+    <script>
+      // Función para mostrar la sección de cotización
+      function mostrarCotizacion() {
+        document.getElementById('cotizacion-container').style.display = 'block';
+        document.getElementById('form-cliente').style.display = 'none';
       }
 
-      const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-      clientes.push({ nombre, email });
-      localStorage.setItem('clientes', JSON.stringify(clientes));
-
-      alert('Cliente agregado correctamente');
-      document.getElementById('nombreCliente').value = '';
-      document.getElementById('emailCliente').value = '';
-    }
-
-    // Función para agregar un producto a la tabla
-    function agregarProducto() {
-      const productosTable = document.getElementById('productosTable').querySelector('tbody');
-      const nuevaFila = document.createElement('tr');
-
-      nuevaFila.innerHTML = `
-        <td><input type="number" class="cantidad" value="1" min="1" onchange="calcularTotal()"></td>
-        <td><input type="text" class="producto" placeholder="Nombre del producto"></td>
-        <td><input type="number" class="precioUnitario" value="0" min="0" onchange="calcularTotal()"></td>
-        <td><input type="text" class="precioTotal" value="0" readonly></td>
-        <td><button class="delete-btn" onclick="eliminarProducto(this)">Eliminar</button></td>
-      `;
-
-      productosTable.appendChild(nuevaFila);
-      calcularTotal();
-    }
-
-    // Función para calcular el subtotal, IVA y total
-    function calcularTotal() {
-      let subtotal = 0;
-      const filas = document.querySelectorAll('#productosTable tbody tr');
-
-      filas.forEach((fila) => {
-        const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
-        const precioUnitario = parseFloat(fila.querySelector('.precioUnitario').value) || 0;
-        const precioTotal = cantidad * precioUnitario;
-
-        fila.querySelector('.precioTotal').value = precioTotal.toFixed(2);
-        subtotal += precioTotal;
-      });
-
-      const iva = subtotal * 0.19;
-      const total = subtotal + iva;
-
-      document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-CO', { minimumFractionDigits: 2 });
-      document.getElementById('iva').innerText = iva.toLocaleString('es-CO', { minimumFractionDigits: 2 });
-      document.getElementById('total').innerText = total.toLocaleString('es-CO', { minimumFractionDigits: 2 });
-    }
-
-    // Función para eliminar un producto de la tabla
-    function eliminarProducto(btn) {
-      const fila = btn.parentElement.parentElement;
-      fila.remove();
-      calcularTotal();
-    }
-
-    // Función para generar y enviar la cotización por correo
-    async function generarYEnviarPDF() {
-      const email = document.getElementById('emailField').value;
-      const title = document.getElementById('titleField').value || 'Cotización';
-      const productosTable = document.querySelectorAll('#productosTable tbody tr');
-
-      if (!email) {
-        alert('Por favor, ingresa un correo electrónico.');
-        return;
+      // Función para mostrar la sección de agregar cliente
+      function mostrarFormularioCliente() {
+        document.getElementById('cotizacion-container').style.display = 'none';
+        document.getElementById('form-cliente').style.display = 'block';
       }
 
-      // Generar el contenido de la cotización
-      const cotizacion = [];
-      productosTable.forEach((fila) => {
-        const cantidad = fila.querySelector('.cantidad').value;
-        const producto = fila.querySelector('.producto').value;
-        const precioUnitario = fila.querySelector('.precioUnitario').value;
-        const precioTotal = fila.querySelector('.precioTotal').value;
+      // Función para guardar el cliente en el localStorage
+      function agregarCliente() {
+        const nombre = document.getElementById('nombreCliente').value;
+        const email = document.getElementById('emailCliente').value;
 
-        cotizacion.push([cantidad, producto, precioUnitario, precioTotal]);
-      });
+        if (!nombre || !email) {
+          alert('Por favor, completa los campos.');
+          return;
+        }
 
-      const subtotal = document.getElementById('subtotal').innerText;
-      const iva = document.getElementById('iva').innerText;
-      const total = document.getElementById('total').innerText;
+        const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        clientes.push({ nombre, email });
+        localStorage.setItem('clientes', JSON.stringify(clientes));
 
-      // Generar el PDF usando jsPDF
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
+        alert('Cliente agregado correctamente');
+        document.getElementById('nombreCliente').value = '';
+        document.getElementById('emailCliente').value = '';
+      }
 
-      // Agregar el logo centrado y más grande
-      const logo = document.getElementById('logo');
-      const logoData = await toBase64(logo);
-      const pageWidth = pdf.internal.pageSize.width;
-      pdf.addImage(logoData, 'PNG', pageWidth / 2 - 40, 10, 80, 40); // Centrado y más grande
+      // Función para agregar un producto a la tabla
+      function agregarProducto() {
+        const productosTable = document.getElementById('productosTable').querySelector('tbody');
+        const nuevaFila = document.createElement('tr');
 
-      // Encabezado debajo del logo
-      pdf.setFontSize(18);
-      pdf.setTextColor('#000000'); // Cambiado a negro
-      pdf.text(title, pageWidth / 2, 60, { align: 'center' }); // Título centrado
+        nuevaFila.innerHTML = `
+          <td><input type="number" class="cantidad" value="1" min="1" onchange="calcularTotal()"></td>
+          <td><input type="text" class="producto" placeholder="Nombre del producto"></td>
+          <td><input type="number" class="precioUnitario" value="0" min="0" onchange="calcularTotal()"></td>
+          <td><input type="text" class="precioTotal" value="0" readonly></td>
+          <td><button class="delete-btn" onclick="eliminarProducto(this)">Eliminar</button></td>
+        `;
 
-      pdf.setFontSize(12);
-      pdf.setTextColor('#000000'); // Cambiado a negro
-      pdf.text(`Correo del cliente: ${email}`, 10, 70);
-      pdf.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 80);
+        productosTable.appendChild(nuevaFila);
+        calcularTotal();
+      }
 
-      // Tabla de productos
-      pdf.autoTable({
-        head: [['Cantidad', 'Producto', 'Precio Unitario (COP)', 'Precio Total (COP)']],
-        body: cotizacion,
-        startY: 90,
-        theme: 'grid',
-        headStyles: { fillColor: [3, 89, 175], textColor: [255, 255, 255] }, // Azul claro para las celdas superiores
-        styles: { fontSize: 10, textColor: '#000000' }, // Cambiado a negro
-        alternateRowStyles: { fillColor: [240, 240, 240] }, // Fondo gris claro para filas alternas
-      });
+      // Función para calcular el subtotal, IVA y total
+      function calcularTotal() {
+        let subtotal = 0;
+        const filas = document.querySelectorAll('#productosTable tbody tr');
 
-      // Totales alineados a la derecha
-      const finalY = pdf.lastAutoTable.finalY + 10;
-      pdf.setFontSize(12);
-      pdf.setTextColor('#000000'); // Cambiado a negro
-      pdf.text(`Subtotal: ${subtotal} COP`, pageWidth - 10, finalY, { align: 'right' });
-      pdf.text(`IVA (19%): ${iva} COP`, pageWidth - 10, finalY + 10, { align: 'right' });
-      pdf.text(`Total a Pagar: ${total} COP`, pageWidth - 10, finalY + 20, { align: 'right' });
+        filas.forEach((fila) => {
+          const cantidad = parseFloat(fila.querySelector('.cantidad').value) || 0;
+          const precioUnitario = parseFloat(fila.querySelector('.precioUnitario').value) || 0;
+          const precioTotal = cantidad * precioUnitario;
 
-      // Convertir el PDF a un Blob
-      const pdfBlob = pdf.output('blob');
-
-      // Crear el FormData para enviar al servidor
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('title', title);
-      formData.append('pdf', pdfBlob, `${title}.pdf`);
-
-      try {
-        const response = await fetch('http://localhost:3000/enviar-correo', {
-          method: 'POST',
-          body: formData,
+          fila.querySelector('.precioTotal').value = precioTotal.toFixed(2);
+          subtotal += precioTotal;
         });
 
-        if (response.ok) {
-          alert('Cotización enviada correctamente.');
-        } else {
-          alert('Error al enviar la cotización.');
-        }
-      } catch (error) {
-        console.error('Error al enviar el correo:', error);
-        alert('Hubo un problema al enviar la cotización.');
+        const iva = subtotal * 0.19;
+        const total = subtotal + iva;
+
+        document.getElementById('subtotal').innerText = subtotal.toLocaleString('es-CO', { minimumFractionDigits: 2 });
+        document.getElementById('iva').innerText = iva.toLocaleString('es-CO', { minimumFractionDigits: 2 });
+        document.getElementById('total').innerText = total.toLocaleString('es-CO', { minimumFractionDigits: 2 });
       }
-    }
 
-    // Función para convertir una imagen a Base64
-    function toBase64(img) {
-      return new Promise((resolve, reject) => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, img.width, img.height);
-        resolve(canvas.toDataURL('image/png'));
-      });
-    }
+      // Función para eliminar un producto de la tabla
+      function eliminarProducto(btn) {
+        const fila = btn.parentElement.parentElement;
+        fila.remove();
+        calcularTotal();
+      }
 
-    // Función para iniciar el servidor
-    async function iniciarServidor() {
-      try {
-        const response = await fetch('http://localhost:3000/start-server', {
-          method: 'POST',
+      // Función para generar y enviar la cotización por correo
+      async function generarYEnviarPDF() {
+        const email = document.getElementById('emailField').value;
+        const title = document.getElementById('titleField').value || 'Cotización';
+        const productosTable = document.querySelectorAll('#productosTable tbody tr');
+
+        if (!email) {
+          alert('Por favor, ingresa un correo electrónico.');
+          return;
+        }
+
+        // Generar el contenido de la cotización
+        const cotizacion = [];
+        productosTable.forEach((fila) => {
+          const cantidad = fila.querySelector('.cantidad').value;
+          const producto = fila.querySelector('.producto').value;
+          const precioUnitario = fila.querySelector('.precioUnitario').value;
+          const precioTotal = fila.querySelector('.precioTotal').value;
+
+          cotizacion.push([cantidad, producto, precioUnitario, precioTotal]);
         });
 
-        if (response.ok) {
-          alert('Servidor iniciado correctamente.');
-        } else {
-          alert('Error al iniciar el servidor.');
+        const subtotal = document.getElementById('subtotal').innerText;
+        const iva = document.getElementById('iva').innerText;
+        const total = document.getElementById('total').innerText;
+
+        // Generar el PDF usando jsPDF
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+
+        // Agregar el logo centrado y más grande
+        const logo = document.getElementById('logo');
+        const logoData = await toBase64(logo);
+        const pageWidth = pdf.internal.pageSize.width;
+        pdf.addImage(logoData, 'PNG', pageWidth / 2 - 40, 10, 80, 40); // Centrado y más grande
+
+        // Encabezado debajo del logo
+        pdf.setFontSize(18);
+        pdf.setTextColor('#000000'); // Cambiado a negro
+        pdf.text(title, pageWidth / 2, 60, { align: 'center' }); // Título centrado
+
+        pdf.setFontSize(12);
+        pdf.setTextColor('#000000'); // Cambiado a negro
+        pdf.text(`Correo del cliente: ${email}`, 10, 70);
+        pdf.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 80);
+
+        // Tabla de productos
+        pdf.autoTable({
+          head: [['Cantidad', 'Producto', 'Precio Unitario (COP)', 'Precio Total (COP)']],
+          body: cotizacion,
+          startY: 90,
+          theme: 'grid',
+          headStyles: { fillColor: [3, 89, 175], textColor: [255, 255, 255] }, // Azul claro para las celdas superiores
+          styles: { fontSize: 10, textColor: '#000000' }, // Cambiado a negro
+          alternateRowStyles: { fillColor: [240, 240, 240] }, // Fondo gris claro para filas alternas
+        });
+
+        // Totales alineados a la derecha
+        const finalY = pdf.lastAutoTable.finalY + 10;
+        pdf.setFontSize(12);
+        pdf.setTextColor('#000000'); // Cambiado a negro
+        pdf.text(`Subtotal: ${subtotal} COP`, pageWidth - 10, finalY, { align: 'right' });
+        pdf.text(`IVA (19%): ${iva} COP`, pageWidth - 10, finalY + 10, { align: 'right' });
+        pdf.text(`Total a Pagar: ${total} COP`, pageWidth - 10, finalY + 20, { align: 'right' });
+
+        // Convertir el PDF a un Blob
+        const pdfBlob = pdf.output('blob');
+
+        // Crear el FormData para enviar al servidor
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('title', title);
+        formData.append('pdf', pdfBlob, `${title}.pdf`);
+
+        try {
+          const response = await fetch('http://localhost:3000/enviar-correo', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (response.ok) {
+            alert('Cotización enviada correctamente.');
+          } else {
+            alert('Error al enviar la cotización.');
+          }
+        } catch (error) {
+          console.error('Error al enviar el correo:', error);
+          alert('Hubo un problema al enviar la cotización.');
         }
-      } catch (error) {
-        console.error('Error al iniciar el servidor:', error);
-        alert('Hubo un problema al intentar iniciar el servidor.');
       }
-    }
-  </script>
-</body>
+
+      // Función para convertir una imagen a Base64
+      function toBase64(img) {
+        return new Promise((resolve, reject) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+          resolve(canvas.toDataURL('image/png'));
+        });
+      }
+
+      // Función para iniciar el servidor
+      async function iniciarServidor() {
+        try {
+          const response = await fetch('http://localhost:3000/start-server', {
+            method: 'POST',
+          });
+
+          if (response.ok) {
+            alert('Servidor iniciado correctamente.');
+          } else {
+            alert('Error al iniciar el servidor.');
+          }
+        } catch (error) {
+          console.error('Error al iniciar el servidor:', error);
+          alert('Hubo un problema al intentar iniciar el servidor.');
+        }
+      }
+    </script>
+  </body>
 
 </html>
