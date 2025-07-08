@@ -30,13 +30,13 @@ app.post('/enviar-correo', upload.single('pdf'), async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail.com',
     auth: {
-      user: 'spamsitowtf@gmail.com', //Aqui va el correo
-      pass: 'loqc ulrs yspb ortg', //Aqui va la contraseña
+      user: '@gmail.com', //Aqui va el correo
+      pass: '', //Aqui va la contraseña
     },
   });
 
   const mailOptions = {
-    from: 'spamsitowtf@gmail.com',  //Aqui va el correo
+    from: '@gmail.com',  //Aqui va el correo
     to: email,
     subject: title,
     text: 'Buen día, adjunto cotización solicitada.\n\nAtentamente\n\nLuis Gustavo Rojas\nTALLERES LGR SAS\n3112319008-4596519',
